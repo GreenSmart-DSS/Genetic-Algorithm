@@ -1,0 +1,45 @@
+# ============================================================
+# Griewank function example (5 inputs).
+# Minimize 1 + sum(x^2)/4000 - prod(cos(x_i / sqrt(i)))
+# Global minimum 0 at the origin. Many regularly spaced
+# local minima overlaid on a wide parabolic bowl; the
+# product term creates a fractal-like landscape.
+# ============================================================
+
+# --- objective ------------------------------------------------
+objective_file: objective_functions.py
+objective_function: griewank
+sense: minimize
+
+# --- population & stopping -----------------------------------
+pop_size: 150
+max_generations: 1500
+no_improve_limit: 120
+
+# --- selection ------------------------------------------------
+selection: tournament
+tournament_size: 3
+elitism: 4
+
+# --- genetic operators ---------------------------------------
+crossover_rate: 0.9
+crossover: blend
+mutation_rate: 0.12      # slightly lower than Rastrigin:
+                         # Griewank's local minima are shallow,
+                         # so moderate mutation is enough
+
+# --- randomness & output -------------------------------------
+seed: 42
+save_history: true
+plot: true
+verbose: true
+outdir: results_griewank
+
+# --- variables ------------------------------------------------
+# Standard Griewank domain: [-600, 600] per variable.
+variables:
+  - { name: x1, dtype: float, lb: -600.0, ub: 600.0 }
+  - { name: x2, dtype: float, lb: -600.0, ub: 600.0 }
+  - { name: x3, dtype: float, lb: -600.0, ub: 600.0 }
+  - { name: x4, dtype: float, lb: -600.0, ub: 600.0 }
+  - { name: x5, dtype: float, lb: -600.0, ub: 600.0 }

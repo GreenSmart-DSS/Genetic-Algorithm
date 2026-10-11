@@ -1,0 +1,52 @@
+# ============================================================
+# Schwefel function example (5 inputs).
+# Minimize 418.9829*n - sum(x_i * sin(sqrt(|x_i|))),
+# global minimum ~0 when every x_i ~ 420.9687.
+# Deceptive multimodal: the global basin is far from the
+# next-best local minima, so the GA must explore widely.
+# ============================================================
+
+# --- objective ------------------------------------------------
+objective_file: objective_functions.py
+objective_function: schwefel
+sense: minimize
+
+# --- population & stopping -----------------------------------
+# Schwefel is deceptive: local minima are at symmetric
+# positions far from the true optimum. Large population
+# and generous generations are needed.
+pop_size: 300
+max_generations: 10000   # Schwefel converges slowly due to
+                         # deception; 10k gens is realistic
+no_improve_limit: 150
+
+# --- selection ------------------------------------------------
+selection: tournament
+tournament_size: 3
+elitism: 6
+
+# --- genetic operators ---------------------------------------
+crossover_rate: 0.9
+crossover: blend         # wide range: blend spreads genes
+                         # across the large [-500, 500] domain
+                         # better than sbx here
+mutation_rate: 0.2       # higher rate needed to escape the
+                         # many deceptive local basins
+
+# --- randomness & output -------------------------------------
+seed: 42
+save_history: true
+plot: true
+verbose: true
+outdir: results_schwefel
+
+# --- variables ------------------------------------------------
+# Standard Schwefel domain: [-500, 500] per variable.
+# The optimum (420.9687) is far from the domain center,
+# making this function particularly deceptive.
+variables:
+  - { name: x1, dtype: float, lb: -500.0, ub: 500.0 }
+  - { name: x2, dtype: float, lb: -500.0, ub: 500.0 }
+  - { name: x3, dtype: float, lb: -500.0, ub: 500.0 }
+  - { name: x4, dtype: float, lb: -500.0, ub: 500.0 }
+  - { name: x5, dtype: float, lb: -500.0, ub: 500.0 }

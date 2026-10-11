@@ -1,0 +1,49 @@
+# ============================================================
+# Rastrigin function example (5 inputs).
+# Minimize 10*n + sum(x_i^2 - 10*cos(2*pi*x_i)),
+# global minimum 0 at the origin. Dense grid of local minima;
+# strong exploration needed to avoid getting trapped.
+# ============================================================
+
+# --- objective ------------------------------------------------
+objective_file: objective_functions.py
+objective_function: rastrigin
+sense: minimize
+
+# --- population & stopping -----------------------------------
+# Rastrigin has ~10^n local minima in n dimensions, so a
+# larger population and more generations are needed compared
+# to smooth functions like Sphere or Rosenbrock.
+pop_size: 300
+max_generations: 800
+no_improve_limit: 120   # extra patience for multimodal
+
+# --- selection ------------------------------------------------
+selection: tournament
+tournament_size: 3
+elitism: 6               # more elites preserve diversity in
+                         # multimodal landscapes
+
+# --- genetic operators ---------------------------------------
+crossover_rate: 0.9
+crossover: blend         # blend spreads genes across the wide
+                         # [-5.12, 5.12] domain effectively
+mutation_rate: 0.2       # higher mutation helps escape local
+                         # minima (typical 0.1 for unimodal)
+
+# --- randomness & output -------------------------------------
+seed: 42
+save_history: true
+plot: true
+verbose: true
+outdir: results_rastrigin
+
+# --- variables ------------------------------------------------
+# Standard Rastrigin domain: [-5.12, 5.12] per variable.
+# Many local minima are spaced at integer values.
+variables:
+  - { name: x1, dtype: float, lb: -5.12, ub: 5.12 }
+  - { name: x2, dtype: float, lb: -5.12, ub: 5.12 }
+  - { name: x3, dtype: float, lb: -5.12, ub: 5.12 }
+  - { name: x4, dtype: float, lb: -5.12, ub: 5.12 }
+  - { name: x5, dtype: float, lb: -5.12, ub: 5.12 }

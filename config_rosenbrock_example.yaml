@@ -1,0 +1,112 @@
+# ============================================================
+# Rosenbrock function example (4 inputs).
+# Minimize sum[ 100*(x_{i+1} - x_i^2)^2 + (1 - x_i)^2 ]
+# Global minimum 0 at (1, 1, ..., 1). Banana-shaped valley;
+# gradient is shallow so the GA must follow a narrow ridge.
+# ============================================================
+
+# --- objective ------------------------------------------------
+# Path to the Python file containing the objective function.
+objective_file: objective_functions.py
+
+# Name of the callable inside objective_file. Receives a dict
+# {variable_name: value} and returns a single number.
+objective_function: rosenbrock
+
+# "minimize" or "maximize" — the GA converts internally so
+# your objective function never deals with sign flipping.
+sense: minimize
+
+# --- population & stopping -----------------------------------
+# Number of individuals per generation. Larger populations
+# explore more but cost more fitness evaluations per gen.
+pop_size: 100
+
+# Hard cap on generations. The run stops at this many even if
+# the solution is still improving.
+max_generations: 300
+
+# Early-stop patience: stop after this many consecutive gens
+# with no improvement in the best fitness. Set to 0 to disable
+# (run until max_generations).
+no_improve_limit: 60
+
+# --- selection ------------------------------------------------
+# Parent selection method:
+#   tournament — pick tournament_size random individuals,
+#                keep the best (robust, default).
+#   roulette   — fitness-proportional (needs non-negative
+#                fitness; not recommended with penalties).
+#   rank       — selection pressure based on rank order,
+#                not raw fitness (stable convergence).
+selection: tournament
+
+# Number of contenders in tournament selection. Higher = more
+# selection pressure (faster convergence, less diversity).
+tournament_size: 3
+
+# Number of best individuals copied unchanged into the next
+# generation (elitism). Prevents losing the current best.
+# Typical: 1-6 depending on pop_size.
+elitism: 2
+
+# --- genetic operators ---------------------------------------
+# Probability that a mated pair actually crosses over.
+# At crossover_rate < 1.0, some pairs pass through unchanged.
+crossover_rate: 0.9
+
+# Crossover operator applied block-by-block:
+#   uniform     — each gene randomly picked from either parent
+#   single_point — one cut point, tails swapped
+#   two_point   — two cut points, middle segment swapped
+#   sbx         — Simulated Binary Crossover (binary-search-like)
+#   blend       — BLX-alpha, samples between/around parents
+#                 (best for continuous float variables)
+#   order       — order crossover OX (best for permutations/TSP)
+#   pmx         — partially-mapped crossover (permutations)
+crossover: blend
+
+# Per-gene mutation probability. Each gene in each offspring
+# has this chance of being mutated. Typical range: 0.01-0.3.
+# Too high → random search; too low → stagnation.
+mutation_rate: 0.1
+
+# --- randomness & output -------------------------------------
+# Random seed. Set to an int for reproducible results (same
+# seed → same run). null = non-deterministic.
+seed: 42
+
+# Write history.csv with per-generation best/mean/std fitness.
+save_history: true
+
+# Render convergence.png (requires matplotlib). CLI flags
+# --plot / --no-plot override this; if neither flag is given,
+# this YAML value is used.
+plot: true
+
+# Print per-generation progress to stdout. CLI flags -v / -q
+# override this; if neither flag is given, this YAML value
+# is used.
+verbose: true
+
+# Output directory for best_solution.json, history.csv, and
+# convergence.png. Created automatically if it does not exist.
+outdir: results_rosenbrock
+
+# --- variables ------------------------------------------------
+# Each entry defines one decision variable passed to the
+# objective function. The `name` becomes the dict key.
+#
+# Types and their options:
+#   float       — continuous; requires lb, ub (default 0..1)
+#   int         — integer; requires lb, ub
+#   binary      — single 0/1 gene; no bounds needed
+#   matrix      — list of categorical indices of length `size`;
+#                 use `values` for a fixed vocabulary, or
+#                 `high` for random int range [0, high)
+#   permutation — ordering of 0..size-1; requires `size`
+variables:
+  - { name: x1, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x2, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x3, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x4, dtype: float, lb: -10.0, ub: 10.0 }

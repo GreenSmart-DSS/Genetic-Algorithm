@@ -1,0 +1,51 @@
+# ============================================================
+# Traveling Salesman Problem example (15 cities).
+# Finds the shortest round-trip tour visiting every city once.
+# Demonstrates the `permutation` variable type and the
+# order / pmx crossover operators (designed for permutations).
+# ============================================================
+
+# --- objective ------------------------------------------------
+objective_file: objective_functions.py
+objective_function: tsp_15_cities   # fixed 15-city benchmark
+                                    # (city coordinates live in
+                                    #  objective_functions.py)
+sense: minimize
+
+# --- population & stopping -----------------------------------
+pop_size: 200            # permutations benefit from a
+                         # moderately large population
+max_generations: 400
+no_improve_limit: 80     # TSP converges fast; stop early
+
+# --- selection ------------------------------------------------
+selection: tournament
+tournament_size: 3
+elitism: 4               # keep the best routes alive
+
+# --- genetic operators ---------------------------------------
+crossover_rate: 0.9
+# For permutation variables use a permutation-aware operator:
+#   order — order crossover (OX). Preserves relative order and
+#           adjacency, ideal for TSP route improvement.
+#   pmx   — partially-mapped crossover. Preserves absolute
+#           positions, better for assignment problems.
+# Scalar crossovers (uniform, blend, ...) leave permutations
+# untouched (a permutation would become invalid if crossed
+# gene-by-gene), so set one of these for permutation problems.
+crossover: order
+mutation_rate: 0.2       # swap-rate for permutation blocks
+
+# --- randomness & output -------------------------------------
+seed: 42                 # deterministic benchmark route
+save_history: true
+plot: true
+verbose: true
+outdir: results_tsp
+
+# --- variables ------------------------------------------------
+# A single `permutation` variable. It encodes an ordering of
+# city indices 0..size-1 (the visit order). `size` must equal
+# the number of cities in the objective's coordinate list.
+variables:
+  - { name: route, dtype: permutation, size: 15 }

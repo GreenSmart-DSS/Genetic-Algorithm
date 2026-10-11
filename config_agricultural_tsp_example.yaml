@@ -1,0 +1,58 @@
+# ============================================================
+# Agricultural TSP example
+#
+# Application:
+#   Irrigation monitoring vehicle routing
+#
+# The vehicle starts from the farm depot (node 0),
+# visits every irrigation monitoring point exactly once,
+# and returns to the depot.
+#
+# Objective:
+#   Minimize total round-trip travel distance.
+#   Optimum = 2982.92 m
+# ============================================================
+
+
+# --- objective ------------------------------------------------
+
+objective_file: objective_functions.py
+objective_function: agricultural_tsp_15
+sense: minimize
+
+
+# --- population & stopping -----------------------------------
+
+pop_size: 200
+max_generations: 4000
+no_improve_limit: 2000
+
+
+# --- selection ------------------------------------------------
+
+selection: tournament
+tournament_size: 3
+elitism: 4
+
+
+# --- genetic operators ---------------------------------------
+
+crossover_rate: 0.90
+crossover: order
+
+mutation_rate: 0.2
+
+
+# --- randomness & output -------------------------------------
+
+seed: 42
+save_history: true
+plot: true
+verbose: true
+outdir: results_agricultural_tsp
+
+
+# --- variables ------------------------------------------------
+
+variables:
+  - { name: route, dtype: permutation, size: 15 }

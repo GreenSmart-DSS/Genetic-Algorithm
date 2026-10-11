@@ -1,0 +1,45 @@
+# ============================================================
+# Sphere function example (5 inputs).
+# Minimize  sum(x_i^2), global minimum 0 at the origin.
+# Simple convex bowl — easy to converge, good baseline test.
+# ============================================================
+
+# --- objective ------------------------------------------------
+objective_file: objective_functions.py
+objective_function: sphere
+sense: minimize
+
+# --- population & stopping -----------------------------------
+pop_size: 100          # individuals per generation
+max_generations: 1000   # hard cap (sphere converges fast but
+                        # keep room to reach high precision)
+no_improve_limit: 80    # patience before early stop (0 = off)
+
+# --- selection ------------------------------------------------
+selection: tournament    # tournament | roulette | rank
+tournament_size: 3       # tournament contenders
+elitism: 4               # best N copied unchanged to next gen
+
+# --- genetic operators ---------------------------------------
+crossover_rate: 0.9      # probability a pair crosses over
+crossover: blend         # BLX-alpha, ideal for smooth continuous
+                         # landscapes (uniform | single_point |
+                         # two_point | sbx | blend | pmx | order)
+mutation_rate: 0.1       # per-gene mutation probability
+
+# --- randomness & output -------------------------------------
+seed: 42                 # int = reproducible; null = random
+save_history: true       # write history.csv
+plot: true               # render convergence.png (needs matplotlib)
+verbose: true            # print per-generation progress
+outdir: results_sphere   # output directory
+
+# --- variables ------------------------------------------------
+# 5 continuous variables in [-10, 10]. The sphere is rotation-
+# invariant so the GA should converge from any starting seed.
+variables:
+  - { name: x1, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x2, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x3, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x4, dtype: float, lb: -10.0, ub: 10.0 }
+  - { name: x5, dtype: float, lb: -10.0, ub: 10.0 }

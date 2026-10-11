@@ -1,0 +1,63 @@
+# ============================================================
+# Constrained optimization example.
+# Minimize  a + b + 0.5*c   subject to:
+#   a + b >= 7.5        (inequality, tolerance 0.5)
+#   c      <= 2.0       (inequality)
+# The constraint function lives in objective_functions.py and
+# returns {name: (current_value, target, tolerance)}.
+# Infeasible chromosomes are penalized so the GA still finds
+# the feasible boundary optimum.
+# ============================================================
+
+# --- objective ------------------------------------------------
+objective_file: objective_functions.py
+objective_function: constrained_linear
+
+# Name of the constraint function in the same file. It receives
+# the same decoded {name: value} dict and returns a dict of
+#   name -> (current, target, tol)   for a constraint
+#   name -> current                  for a plain threshold (tol 0)
+# The GA turns this into a penalty added to the raw objective.
+constraint_function: constrained_linear_constraints
+
+# How strongly violations are penalized:
+#   auto — scale the violation total by (1 + |raw objective|)
+#          so each unit of violation always outweighs objective
+#          gain; a feasible individual is never beaten by an
+#          infeasible one (recommended default).
+#   1.0  — any positive float multiplies the violation total
+#          directly (penalty = weight * total_violation).
+constraint_penalty_weight: auto
+
+sense: minimize
+
+# --- population & stopping -----------------------------------
+pop_size: 100
+max_generations: 300
+no_improve_limit: 80
+
+# --- selection ------------------------------------------------
+selection: tournament
+tournament_size: 3
+elitism: 4
+
+# --- genetic operators ---------------------------------------
+crossover_rate: 0.9
+crossover: blend
+mutation_rate: 0.15
+
+# --- randomness & output -------------------------------------
+seed: 7
+save_history: true
+plot: true
+verbose: true
+outdir: results_constrained
+
+# --- variables ------------------------------------------------
+# Continuous decision variables. Feasible region is where
+# a + b >= 7.5 (tolerance 0.5) and c <= 2.0, so the optimum
+# sits on the constraint boundary.
+variables:
+  - { name: a, dtype: float, lb: 0.0, ub: 10.0 }
+  - { name: b, dtype: float, lb: 0.0, ub: 10.0 }
+  - { name: c, dtype: float, lb: 0.0, ub: 5.0 }
