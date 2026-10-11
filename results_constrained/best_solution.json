@@ -1,0 +1,11 @@
+{
+  "fitness": 8.4999999999985,
+  "generation": 267,
+  "stopped_early": true,
+  "converged": false,
+  "solution": {
+    "a": 5.685491707193244,
+    "b": 1.8145082928057563,
+    "c": 1.9999999999990017
+  }
+}

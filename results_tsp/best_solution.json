@@ -1,0 +1,25 @@
+{
+  "fitness": 294.60025115131197,
+  "generation": 143,
+  "stopped_early": true,
+  "converged": false,
+  "solution": {
+    "route": [
+      6,
+      5,
+      7,
+      9,
+      11,
+      12,
+      13,
+      14,
+      10,
+      8,
+      2,
+      1,
+      3,
+      0,
+      4
+    ]
+  }
+}
